@@ -1,86 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semafor Clone - Africa RSS</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ubuntu BLVD - Africa News</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
-        header { background-color: #ffcc00; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
-        nav { display: flex; justify-content: center; background-color: #333; padding: 10px; }
-        nav a { color: white; text-decoration: none; padding: 10px 15px; }
-        nav a:hover { background-color: #575757; }
-        .content { padding: 20px; text-align: center; }
-        .news-section { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        .news-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
-        .news-item:last-child { border-bottom: none; }
-        .news-title { font-size: 18px; font-weight: bold; }
-        .news-description { color: #555; }
-        .footer { text-align: center; padding: 20px; background: #333; color: white; margin-top: 20px; }
+        /* Color scheme inspired by Ubuntu's branding */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+        }
+        header {
+            background-color: #E95420; /* Ubuntu Orange */
+            padding: 15px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            padding: 15px;
+            gap: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .news-section {
+            width: 65%;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            width: 30%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .news-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .news-title a {
+            color: #E95420;
+            text-decoration: none;
+        }
+        .news-title a:hover {
+            text-decoration: underline;
+        }
+        .news-description {
+            color: #555;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: white;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        .subscription {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .subscription input {
+            padding: 10px;
+            width: 70%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+        }
+        .subscription button {
+            padding: 10px;
+            border: none;
+            background-color: #E95420;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .subscription button:hover {
+            background-color: #c4421a;
+        }
     </style>
     <script>
-        // This script fetches the Google News RSS feed for "Africa"
-        // and attempts to parse it as XML in the browser.
-        // IMPORTANT NOTE: This might cause CORS errors if Google News RSS
-        // does not allow cross-origin requests.
-        // In that case, you need a server-side proxy or a CORS-friendly feed aggregator.
-
         async function fetchRSS() {
-            const RSS_URL = 'https://news.google.com/rss/search?q=africa';
-
+            const proxyUrl = 'https://api.allorigins.win/get?url=';
+            const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=Microsoft+investment+in+South+Africa+OR+US+South+Africa+relations');
+            
             try {
-                // Fetch the RSS feed as text
-                const response = await fetch(RSS_URL);
-                const rssText = await response.text();
-
-                // Parse the RSS text as XML
+                const response = await fetch(proxyUrl + rssUrl);
+                const data = await response.json();
                 const parser = new DOMParser();
-                const rssDoc = parser.parseFromString(rssText, 'text/xml');
-
-                // Get all <item> elements
+                const rssDoc = parser.parseFromString(data.contents, 'text/xml');
                 const items = Array.from(rssDoc.querySelectorAll('item'));
-
-                // Select the container to display the feed
                 const newsSection = document.querySelector('.news-section');
                 newsSection.innerHTML = '';
-
+                
                 if (items.length === 0) {
-                    newsSection.innerHTML = '<p>No items found or CORS error occurred.</p>';
+                    newsSection.innerHTML = '<p>No items found.</p>';
                     return;
                 }
-
-                // Display up to 5 items
-                items.slice(0,5).forEach((item) => {
+                
+                items.slice(0, 5).forEach((item) => {
                     const title = item.querySelector('title')?.textContent || 'No title';
                     const link = item.querySelector('link')?.textContent || '#';
                     let description = item.querySelector('description')?.textContent || '';
-
-                    // Some feeds store content in CDATA or text. Simplify it.
-                    description = description.replace(/<[^>]*>?/gm, ''); // Remove HTML tags if present
-
-                    // Create a news item div
+                    description = description.replace(/<[^>]*>?/gm, '');
+                    
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
-
                     newsItem.innerHTML = `
                         <div class="news-title"><a href="${link}" target="_blank">${title}</a></div>
                         <div class="news-description">${description}</div>
                     `;
-
                     newsSection.appendChild(newsItem);
                 });
             } catch (error) {
                 console.error('Failed to fetch or parse RSS:', error);
-                const newsSection = document.querySelector('.news-section');
-                newsSection.innerHTML = '<p>Failed to load feed. Check console for details.</p>';
+                document.querySelector('.news-section').innerHTML = '<p>Failed to load feed.</p>';
             }
         }
-
+        
+        function subscribeNewsletter() {
+            alert('Thank you for subscribing! You will receive weekly news updates.');
+        }
+        
         window.onload = fetchRSS;
     </script>
 </head>
 <body>
-    <header>Semafor Clone - Africa RSS</header>
+    <header>Ubuntu BLVD</header>
     <nav>
         <a href="#">Home</a>
         <a href="#">Politics</a>
@@ -89,12 +174,23 @@
         <a href="#">World</a>
     </nav>
     <div class="content">
-        <h1>Latest Africa News (via Google RSS)</h1>
-        <p>Stay updated with headlines from the Google News Africa RSS feed.</p>
         <div class="news-section">
-            <p>Loading news...</p>
+            <p class="headline">Latest Africa News</p>
+            <p class="subtext">Explore the latest stories on Microsoft’s investment and US-South Africa relations.</p>
+            <div class="news-container">
+                <p>Loading news...</p>
+            </div>
+        </div>
+        <div class="sidebar">
+            <h3>Newsletter Subscription</h3>
+            <p>Stay updated with the latest African news by subscribing to our newsletter.</p>
+            <div class="subscription">
+                <input type="email" placeholder="Enter your email" />
+                <button onclick="subscribeNewsletter()">Subscribe</button>
+            </div>
         </div>
     </div>
-    <div class="footer">&copy; 2025 Semafor Clone - All Rights Reserved</div>
+    <div class="footer">&copy; 2025 Ubuntu BLVD - All Rights Reserved</div>
 </body>
 </html>
+
