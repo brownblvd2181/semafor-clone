@@ -5,61 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ubuntu BLVD - Africa News</title>
     <style>
-        /* Color scheme inspired by Ubuntu's branding */
+        /* Advanced styling for modern UI */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f3f3f3;
+            background-color: #f8f9fa;
         }
         header {
-            background-color: #E95420; /* Ubuntu Orange */
-            padding: 15px;
+            background-color: #E95420;
+            padding: 20px;
             text-align: center;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             color: #ffffff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
         nav {
             display: flex;
             justify-content: center;
             background-color: #333;
             padding: 15px;
-            gap: 20px;
+            gap: 25px;
         }
         nav a {
             color: white;
             text-decoration: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 24px;
+            font-size: 18px;
             border-radius: 5px;
             transition: background 0.3s ease;
         }
         nav a:hover {
             background-color: #575757;
         }
-        .content {
+        .container {
             display: flex;
             justify-content: space-between;
             padding: 40px;
             max-width: 1200px;
             margin: auto;
         }
-        .news-section {
-            width: 65%;
+        .news-section, .sidebar {
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .sidebar {
-            width: 30%;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
+        .news-section { width: 65%; }
+        .sidebar { width: 30%; }
         .news-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid #ddd;
@@ -67,52 +65,41 @@
         .news-item:last-child {
             border-bottom: none;
         }
-        .news-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 6px;
+        .news-thumbnail {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
         }
         .news-title a {
             color: #E95420;
+            font-size: 20px;
+            font-weight: bold;
             text-decoration: none;
         }
         .news-title a:hover {
             text-decoration: underline;
         }
-        .news-description {
-            color: #555;
-            font-size: 16px;
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background: #333;
-            color: white;
-            font-size: 14px;
-            margin-top: 30px;
-        }
+        .news-description { color: #555; font-size: 16px; }
         .subscription {
             text-align: center;
             padding: 20px;
             background: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
-        .subscription input {
-            padding: 10px;
-            width: 70%;
-            border-radius: 5px;
+        .subscription input, .subscription button {
+            padding: 12px;
+            border-radius: 6px;
             border: 1px solid #ccc;
-            margin-right: 5px;
+            width: 70%;
         }
         .subscription button {
-            padding: 10px;
-            border: none;
             background-color: #E95420;
             color: white;
             cursor: pointer;
-            border-radius: 5px;
+            width: auto;
         }
         .subscription button:hover {
             background-color: #c4421a;
@@ -140,14 +127,12 @@
                 items.slice(0, 5).forEach((item) => {
                     const title = item.querySelector('title')?.textContent || 'No title';
                     const link = item.querySelector('link')?.textContent || '#';
-                    let description = item.querySelector('description')?.textContent || '';
-                    description = description.replace(/<[^>]*>?/gm, '');
-                    
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
-                        <div class="news-title"><a href="${link}" target="_blank">${title}</a></div>
-                        <div class="news-description">${description}</div>
+                        <div class="news-content">
+                            <div class="news-title"><a href="${link}" target="_blank">${title}</a></div>
+                        </div>
                     `;
                     newsSection.appendChild(newsItem);
                 });
@@ -173,24 +158,27 @@
         <a href="#">Technology</a>
         <a href="#">World</a>
     </nav>
-    <div class="content">
+    <div class="container">
         <div class="news-section">
-            <p class="headline">Latest Africa News</p>
-            <p class="subtext">Explore the latest stories on Microsoft’s investment and US-South Africa relations.</p>
+            <h2>Latest Africa News</h2>
+            <p>Stay informed with the latest on Microsoft’s investment and US-South Africa relations.</p>
             <div class="news-container">
                 <p>Loading news...</p>
             </div>
         </div>
         <div class="sidebar">
             <h3>Newsletter Subscription</h3>
-            <p>Stay updated with the latest African news by subscribing to our newsletter.</p>
+            <p>Stay updated with the latest African news.</p>
             <div class="subscription">
                 <input type="email" placeholder="Enter your email" />
                 <button onclick="subscribeNewsletter()">Subscribe</button>
             </div>
         </div>
     </div>
-    <div class="footer">&copy; 2025 Ubuntu BLVD - All Rights Reserved</div>
+    <footer>
+        <div class="footer">&copy; 2025 Ubuntu BLVD - All Rights Reserved</div>
+    </footer>
 </body>
 </html>
+
 
